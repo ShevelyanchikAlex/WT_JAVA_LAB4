@@ -4,8 +4,8 @@ import com.bsuir.alex.hotel.controller.command.Command;
 import com.bsuir.alex.hotel.controller.command.CommandResult;
 import com.bsuir.alex.hotel.entity.User;
 import com.bsuir.alex.hotel.service.ServiceException;
-import com.bsuir.alex.hotel.service.UserService;
-import com.bsuir.alex.hotel.validation.Validation;
+import com.bsuir.alex.hotel.service.impl.UserServiceImpl;
+import com.bsuir.alex.hotel.validation.impl.ValidationImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,14 +29,14 @@ public class SignUpCommand implements Command {
 
         Map<String, String> signUpData = new HashMap<>();
         signUpData.put(USERNAME, login);
-        Validation validation = new Validation();
+        ValidationImpl validation = new ValidationImpl();
         if (!validation.isValid(signUpData)) {
             String errorName = validation.getInvalidData();
             request.setAttribute(SIGN_UP_ERROR, errorName);
             return CommandResult.forward(LOGIN_PAGE);
         }
 
-        UserService userService = new UserService();
+        UserServiceImpl userService = new UserServiceImpl();
         Optional<User> optionalUser = userService.findByUsername(login);
         if (optionalUser.isPresent()) {
             request.setAttribute(SIGN_UP_ERROR, USERNAME);

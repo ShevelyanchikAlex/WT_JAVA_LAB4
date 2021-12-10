@@ -5,7 +5,7 @@ import com.bsuir.alex.hotel.controller.command.CommandResult;
 import com.bsuir.alex.hotel.entity.Role;
 import com.bsuir.alex.hotel.entity.User;
 import com.bsuir.alex.hotel.service.ServiceException;
-import com.bsuir.alex.hotel.service.UserService;
+import com.bsuir.alex.hotel.service.impl.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +27,7 @@ public class LoginCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
         HttpSession session = request.getSession();
-        UserService service = new UserService();
+        UserServiceImpl service = new UserServiceImpl();
         String login = request.getParameter(USERNAME);
         String password = request.getParameter(PASSWORD);
         Optional<User> optionalUser = service.findByUsernameAndPassword(login, password);

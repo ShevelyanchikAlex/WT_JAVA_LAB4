@@ -1,5 +1,7 @@
 package com.bsuir.alex.hotel.connection_pool;
 
+import com.bsuir.alex.hotel.connection_pool.constant.DBProperty;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -11,6 +13,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
+    private static final String BAD_CONNECT = "Connections are not created!";
+    private static final String FILE_NOT_FOUND = "File not found";
 
     private static final ReentrantLock lock = new ReentrantLock();
     private static final ReentrantLock connectionLock = new ReentrantLock();
@@ -56,7 +60,7 @@ public class ConnectionPool {
             connections.push(connection);
         }
         if (connections.isEmpty()) {
-            throw new IllegalArgumentException("Connections are not created!");
+            throw new IllegalArgumentException(BAD_CONNECT);
         }
     }
 
@@ -65,14 +69,14 @@ public class ConnectionPool {
         try {
             Class<? extends ConnectionPool> aClass = this.getClass();
             ClassLoader classLoader = aClass.getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream("db.properties");
+            InputStream inputStream = classLoader.getResourceAsStream(DBProperty.PROP_PROPERTIES);
 
             Properties property = new Properties();
             property.load(inputStream);
 
-            connectionSize = Integer.parseInt(property.getProperty("db.connectionSize"));
+            connectionSize = Integer.parseInt(property.getProperty(DBProperty.PROP_CONNECTION_SIZE));
         } catch (IOException e) {
-            throw new IllegalArgumentException("File not found" + e.getMessage(), e);
+            throw new IllegalArgumentException(FILE_NOT_FOUND + e.getMessage(), e);
         }
     }
 

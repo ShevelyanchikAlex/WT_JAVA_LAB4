@@ -3,9 +3,9 @@ package com.bsuir.alex.hotel.controller.command.admin_command;
 import com.bsuir.alex.hotel.controller.command.Command;
 import com.bsuir.alex.hotel.controller.command.CommandResult;
 import com.bsuir.alex.hotel.entity.Room;
-import com.bsuir.alex.hotel.service.RoomService;
+import com.bsuir.alex.hotel.service.impl.RoomServiceImpl;
 import com.bsuir.alex.hotel.service.ServiceException;
-import com.bsuir.alex.hotel.validation.Validation;
+import com.bsuir.alex.hotel.validation.impl.ValidationImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,14 +26,14 @@ public class AddRoomCommand implements Command {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
         String roomNumber = request.getParameter(ROOM_NUMBER);
 
-        Validation validation = new Validation();
+        ValidationImpl validation = new ValidationImpl();
         Map<String, String> values = new HashMap<>();
         values.put(ROOM_NUMBER, roomNumber);
         if (!validation.isValid(values)) {
             return CommandResult.redirect(MAIN_PAGE + MESSAGE + ERROR_MESSAGE);
         }
 
-        RoomService roomService = new RoomService();
+        RoomServiceImpl roomService = new RoomServiceImpl();
         roomService.saveRoom(null, roomNumber, false);
 
         List<Room> roomList = roomService.findAll();

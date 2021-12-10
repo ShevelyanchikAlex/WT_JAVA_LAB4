@@ -3,6 +3,7 @@ package com.bsuir.alex.hotel.repository;
 import com.bsuir.alex.hotel.entity.Entity;
 import com.bsuir.alex.hotel.repository.builder.Builder;
 import com.bsuir.alex.hotel.repository.queryoperator.QueryOperator;
+import com.bsuir.alex.hotel.repository.queryoperator.impl.QueryOperatorImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public abstract class AbstractRepository<T extends Entity> implements Repository<T> {
 
     private final Connection connection;
+    private final QueryOperator queryOperator = new QueryOperatorImpl();
 
     public AbstractRepository(Connection connection) {
         this.connection = connection;
@@ -24,7 +26,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
         List<T> objects = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            QueryOperator.prepare(preparedStatement, params);
+            queryOperator.prepare(preparedStatement, params);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -49,13 +51,13 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
         try {
             String sql;
             if (item.getId() != null) {
-                sql = QueryOperator.makeUpdateQuery(getFields(item), getTableName());
+                sql = queryOperator.makeUpdateQuery(getFields(item), getTableName());
             } else {
-                sql = QueryOperator.makeInsertQuery(getFields(item), getTableName());
+                sql = queryOperator.makeInsertQuery(getFields(item), getTableName());
             }
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            QueryOperator.prepare(preparedStatement, getFields(item));
+            queryOperator.prepare(preparedStatement, getFields(item));
 
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {

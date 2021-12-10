@@ -28,8 +28,8 @@ public class CommandFactory {
         return INSTANCE;
     }
 
-    public Command getCommand(String command) {
-        switch (command) {
+    public Command getCommand(String name) {
+        switch (name) {
             case LOGIN:
                 return new LoginCommand();
             case SHOW_ROOMS:

@@ -3,7 +3,7 @@ package com.bsuir.alex.hotel.controller.command.admin_command;
 import com.bsuir.alex.hotel.controller.command.Command;
 import com.bsuir.alex.hotel.controller.command.CommandResult;
 import com.bsuir.alex.hotel.entity.Room;
-import com.bsuir.alex.hotel.service.RoomService;
+import com.bsuir.alex.hotel.service.impl.RoomServiceImpl;
 import com.bsuir.alex.hotel.service.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ public class ShowRoomsCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
-        RoomService roomService = new RoomService();
+        RoomServiceImpl roomService = new RoomServiceImpl();
         List<Room> fullRoomList = roomService.findAll();
         request.setAttribute(ROOM_LIST, fullRoomList);
 
